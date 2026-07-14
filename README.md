@@ -1,1 +1,0 @@
-# perangkat-keras
