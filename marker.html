@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kartu Misi AR - Perangkat Keras</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --secondary: #22D3EE;
+            --purple: #8B5CF6;
+            --dark: #020617;
+            --dark2: #0F172A;
+            --success: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1E3A8A 0%, #0F172A 60%, #020617 100%);
+            color: #f8fafc;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: var(--secondary);
+            text-shadow: 0 4px 10px rgba(34, 211, 238, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 2px solid rgba(226, 232, 240, 0.1);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            box-shadow: 0 0 15px var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Grid Sistem Kartu */
+        .grid-markers {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .marker-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(34, 211, 238, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .marker-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(34, 211, 238, 0.2);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .marker-card h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.4rem;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .marker-card p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .btn-preview {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: rgba(34, 211, 238, 0.1);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .marker-card:hover .btn-preview {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        /* Modal Pop-up Box */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.hidden {
+            display: none !important;
+        }
+
+        .modal-content {
+            background: var(--dark2);
+            border: 3px solid var(--secondary);
+            border-radius: 25px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: white;
+        }
+
+        .modal-content h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--secondary);
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+
+        .img-wrapper {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .modal-instruction {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Menu</a>
+
+        <div class="header">
+            <h1>Daftar Kartu Misi AR</h1>
+            <p>Klik salah satu komponen untuk melihat gambar marker yang siap di-scan!</p>
+        </div>
+
+        <div class="grid-markers" id="marker-grid-container"></div>
+    </div>
+
+    <div id="marker-preview-modal" class="modal hidden">
+        <div class="modal-content">
+            <button id="close-preview-btn" class="close-btn">&times;</button>
+            <h3 id="modal-marker-title">NAMA KARTU</h3>
+            <div class="img-wrapper">
+                <img id="modal-marker-img" src="" alt="Pratinjau Kartu">
+            </div>
+            <p class="modal-instruction">Arahkan kamera WebAR perangkat Anda pada gambar kartu ini untuk mendeteksi komponen.</p>
+        </div>
+    </div>
+
+    <script>
+        // Data Struktur Penuh 11 Komponen
+        const markersData = [
+            { id: "motherboard", title: "Motherboard", icon: "📟", info: "Papan sirkuit utama komputer" },
+            { id: "processor", title: "Processor", icon: "🔲", info: "Otak pemroses data komputer" },
+            { id: "harddisk", title: "Harddisk", icon: "💾", info: "Penyimpanan file permanen" },
+            { id: "ram", title: "RAM", icon: "🎛️", info: "Penyimpanan data acak sementara" },
+            { id: "gpu", title: "GPU / VGA Card", icon: "🎮", info: "Pengolah grafis tampilan layar" },
+            { id: "psu", title: "Power Supply", icon: "⚡", info: "Pemasok daya listrik komputer" },
+            { id: "monitor", title: "Monitor", icon: "🖥️", info: "Perangkat output visual utama" },
+            { id: "keyboard", title: "Keyboard", icon: "⌨️", info: "Papan ketik input karakter & teks" },
+            { id: "mouse", title: "Mouse", icon: "🖱️", info: "Perangkat penunjuk navigasi kursor" },
+            { id: "printer", title: "Printer", icon: "🖨️", info: "Pencetak dokumen digital ke kertas" },
+            { id: "speaker", title: "Speaker", icon: "🔊", info: "Perangkat output suara komputer" }
+        ];
+
+        const gridContainer = document.getElementById("marker-grid-container");
+        
+        // Render 11 kartu secara dinamis
+        markersData.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "marker-card";
+            
+            // Mengarah tepat ke folder masing-masing item/item.jpg
+            const imagePath = `assets/marker/${item.id}/${item.id}.jpg`;
+            
+            card.onclick = () => perbesarMarker(item.title, imagePath);
+            
+            card.innerHTML = `
+                <div class="card-icon">${item.icon}</div>
+                <h3>${item.title}</h3>
+                <p>${item.info}</p>
+                <button class="btn-preview">Lihat Gambar</button>
+            `;
+            gridContainer.appendChild(card);
+        });
+
+        // Fungsi Membuka Jendela Modal Gambar
+        function perbesarMarker(title, imagePath) {
+            const modal = document.getElementById('marker-preview-modal');
+            const modalTitle = document.getElementById('modal-marker-title');
+            const modalImg = document.getElementById('modal-marker-img');
+
+            modalTitle.innerText = title.toUpperCase();
+            modalImg.src = imagePath;
+            
+            modal.classList.remove('hidden');
+        }
+
+        // Fungsi Menutup Modal Tombol Silang
+        document.getElementById('close-preview-btn').onclick = function() {
+            document.getElementById('marker-preview-modal').classList.add('hidden');
+        };
+
+        // Fungsi Menutup Modal Klik Luar Box
+        window.onclick = function(event) {
+            const modal = document.getElementById('marker-preview-modal');
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
