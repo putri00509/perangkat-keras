@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Petualangan AR Seru - Kuis Interaktif</title>
+    
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="assets/js/aframe-ar-nft.js"></script>
+    <script src="assets/js/audio-manager.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/quiz.js"></script>
+    
+    <style>
+        /* CSS Loader AR.js */
+        .arjs-loader {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .arjs-loader div {
+            text-align: center;
+            font-size: 1.25em;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        #quiz-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85); 
+            backdrop-filter: blur(5px); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .quiz-modal {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px; 
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.4s ease-out; 
+        }
+
+        #quiz-title {
+            color: #1e293b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #3b82f6;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        #question-text {
+            font-size: 1.1rem;
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .quiz-btn {
+            display: block;
+            width: 100%;
+            margin: 12px 0;
+            padding: 14px 20px;
+            cursor: pointer;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left; 
+            transition: all 0.2s ease;
+        }
+
+        .quiz-btn:hover {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #2563eb;
+            transform: translateY(-2px); 
+        }
+
+        .quiz-btn:active {
+            transform: translateY(0);
+        }
+
+        #quiz-result {
+            padding: 20px 0;
+        }
+
+        #score-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        #close-quiz-btn {
+            padding: 12px 25px;
+            margin: 5px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+            background: #ef4444; 
+            color: white;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body style="margin : 0px; overflow: hidden;">
+    <div class="arjs-loader">
+        <div>Loading, please wait...</div>
+    </div>
+
+    <div id="quiz-container" class="hidden">
+        <div class="quiz-modal">
+            <h2 id="quiz-title">Kuis</h2>
+            <div id="question-area">
+                <p id="question-text"></p>
+                <div id="options-container"></div>
+            </div>
+            <div id="quiz-result" class="hidden">
+                <p id="score-text"></p>
+                <button id="close-quiz-btn">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <a-scene vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true; precision: medium; " embedded arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false; assets/markersAreaEnabled: false">    
+        <a-nft type="nft" url="assets/marker/motherboard/motherboard" data-component="motherboard"></a-nft>
+        <a-nft type="nft" url="assets/marker/gpu/gpu" data-component="gpu"></a-nft>
+        <a-nft type="nft" url="assets/marker/hardisk/hardisk" data-component="hardisk"></a-nft>
+        <a-nft type="nft" url="assets/marker/monitor/monitor" data-component="monitor"></a-nft>
+        <a-nft type="nft" url="assets/marker/procesor/procesor" data-component="processor"></a-nft>
+        <a-nft type="nft" url="assets/marker/psu/psu" data-component="psu"></a-nft>
+        <a-nft type="nft" url="assets/marker/ram/ram" data-component="ram"></a-nft>
+        <a-nft type="nft" url="assets/marker/keyboard/keyboard" data-component="keyboard"></a-nft>
+        <a-nft type="nft" url="assets/marker/mouse/mouse" data-component="mouse"></a-nft>
+        <a-nft type="nft" url="assets/marker/printer/printer" data-component="printer"></a-nft>
+        <a-nft type="nft" url="assets/marker/speaker/speaker" data-component="speaker"></a-nft>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+    
+  <script>
+// ==========================================
+// 1. TOMBOL MENU UTAMA - PETUALANG AR
+// ==========================================
+const backButton = document.createElement('a');
+backButton.href = 'index.html';
+backButton.innerHTML = '🧭 Menu Utama';
+
+backButton.setAttribute('style', `
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 12px 22px;
+
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+
+    color: #ffffff;
+    text-decoration: none;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    border-radius: 50px;
+    border: 2px solid #22d3ee;
+
+    box-shadow:
+        0 0 10px rgba(34,211,238,0.6),
+        0 0 20px rgba(34,211,238,0.4);
+
+    transition: all 0.3s ease;
+`);
+
+backButton.addEventListener('mouseenter', () => {
+    backButton.style.transform = 'translateY(-3px) scale(1.05)';
+    backButton.style.boxShadow = `
+        0 0 15px #22d3ee,
+        0 0 30px #3b82f6,
+        0 0 45px rgba(34,211,238,0.7)
+    `;
+});
+
+backButton.addEventListener('mouseleave', () => {
+    backButton.style.transform = 'translateY(0)';
+    backButton.style.boxShadow = `
+        0 0 10px rgba(34,211,238,0.6),
+        0 0 20px rgba(34,211,238,0.4)
+    `;
+});
+
+document.body.appendChild(backButton);
+    // Efek hover untuk tombol
+    backButton.addEventListener('mouseenter', () => {
+        backButton.style.background = '#ffffff';
+        backButton.style.color = '#000000';
+    });
+    backButton.addEventListener('mouseleave', () => {
+        backButton.style.background = 'rgba(0, 0, 0, 0.75)';
+        backButton.style.color = '#ffffff';
+    });
+    document.body.appendChild(backButton);
+
+
+    // ==========================================
+    // 2. MONITORING LIFECYCLE AR & MARKER
+    // ==========================================
+    window.addEventListener('load', () => {
+        const scene = document.querySelector('a-scene');
+        if (!scene) return;
+
+        // Loop semua marker untuk pasang listener
+        const markers = document.querySelectorAll('a-nft');
+
+        markers.forEach(marker => {
+            const url = marker.getAttribute('url');
+            const name = url ? url.split('/').pop() : "Unknown";
+
+            // Deteksi Marker Ketemu
+            marker.addEventListener('markerFound', () => {
+                // Efek flash hijau tipis di layar saat marker terkunci (opsional)
+                document.body.style.border = "5px solid #00ff00"; 
+                setTimeout(() => document.body.style.border = "none", 500);
+                
+                // Jalankan Kuis
+                startQuiz(name);
+            });
+        });
+    });
+
+
+    // ==========================================
+    // 3. PROTEKSI FUNGSI KUIS
+    // ==========================================
+    function startQuiz(componentName) {
+        const cleanName = componentName.trim();
+
+        // Validasi data kuis
+        if (!quizData[cleanName]) return;
+
+        const container = document.getElementById('quiz-container');
+        if (!container) return;
+
+        if (currentComponent === cleanName && !container.classList.contains('hidden')) return;
+
+        currentComponent = cleanName;
+        currentQuestionIndex = 0;
+        score = 0;
+
+        container.classList.remove('hidden');
+        showQuestion();
+    }
+
+
+    // ==========================================
+    // 4. AUDIO INTEGRATION HANDLER
+    // ==========================================
+    window.addEventListener('load', () => {
+        const markers = document.querySelectorAll('a-nft');
+
+        markers.forEach(marker => {
+            const componentName = marker.getAttribute('data-component');
+            const audioPath = marker.getAttribute('data-audio');
+
+            if (componentName && audioPath) {
+                // Inisialisasi audio
+                audioManager.initAudio(componentName, audioPath);
+
+                // Play audio saat marker ditemukan
+                marker.addEventListener('markerFound', () => {
+                    audioManager.playAudio(componentName);
+                });
+
+                // Stop audio saat marker hilang
+                marker.addEventListener('markerLost', () => {
+                    audioManager.stopAudio(componentName);
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
