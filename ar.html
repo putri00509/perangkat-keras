@@ -4,58 +4,192 @@
     <meta charset="UTF-8">
     <title>Media Pembelajaran AR</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
-    
-    <style>
-        body { margin: 0; overflow: hidden; }
-        .marker-guide { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border: 5px dashed #00E5FF; border-radius: 25px; z-index: 9998; pointer-events: none; }
-        .marker-guide.detected { border-color: #22c55e; }
-        .ar-popup { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 350px; background: rgba(0,0,0,0.9); color: white; padding: 20px; border-radius: 20px; display: none; z-index: 9999; border: 2px solid #00E5FF; }
-        .ar-popup.show { display: block; }
-    </style>
+    <script src="assets/js/aframe-ar-nft.js"></script>
+    <script src="assets/js/audio-manager.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
-<body style="margin: 0px; overflow: hidden;">
-    <div id="markerGuide" class="marker-guide"></div>
-    <div id="arPopup" class="ar-popup">
-        <div id="popupIcon" style="text-align:center; font-size:30px;"></div>
-        <div id="popupTitle" style="text-align:center; color:#00E5FF; font-weight:bold;"></div>
-        <div id="popupContent"></div>
+<body style="margin : 0px; overflow: hidden;">
+    <div class="arjs-loader">
+        <div>Loading, please wait...</div>
     </div>
 
-    <audio id="audioPlayer" preload="auto"></audio>
+    <div id="arPopup" class="ar-popup">
+        <div id="popupIcon" style="font-size: 28px; margin-bottom: 5px; text-align: center;"></div>
+        <div id="popupTitle"></div>
+        <div id="popupContent" style="font-size: 14px; line-height: 1.4; margin-top: 5px;"></div>
+    </div>
 
-    <a-scene vr-mode-ui="enabled: false" embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; smooth: true; smoothCount: 10; smoothTolerance: 0.01; smoothThreshold: 5;">
+    <a-scene vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true; precision: medium;" embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; assets/markersAreaEnabled: false">
         
-        <a-nft type="nft" url="assets/marker/motherboard/motherboard" data-audio="assets/audio/motherboard.mp3">
-            <a-entity gltf-model="assets/models/motherboard/scene.glb" scale="500 500 500"></a-entity>
+        <a-nft type="nft" url="assets/marker/motherboard/motherboard" data-component="motherboard" data-audio="assets/audio/motherboard.mp3">
+            <a-entity gltf-model="assets/models/motherboard/scene.glb" scale="500 500 500" position="150 300 -100"></a-entity>
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/speaker/speaker" data-component="speaker" data-audio="assets/audio/speaker.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/speaker/scene.glb" scale="150 150 150" position="50 0 -200" rotation="0 0 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/gpu/gpu" data-component="gpu" data-audio="assets/audio/gpu.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/gpu/scene.glb" scale="0.1 0.1 0.1" position="0 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/hardisk/hardisk" data-component="hardisk" data-audio="assets/audio/hardisk.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/hardisk/scene.glb" scale="500 500 500" position="0 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/ram/ram" data-component="ram" data-audio="assets/audio/ram.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/ram/scene.glb" scale="10 10 10" position="0 0 0" rotation="0 -90 90"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/psu/psu" data-component="psu" data-audio="assets/audio/psu.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/psu/scene.glb" scale="2 2 2" position="0 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/procesor/procesor" data-component="procesor" data-audio="assets/audio/procesor.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/procesor/scene.glb" scale="0.1 0.1 0.1" position="0 0 0" rotation="0 180 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/monitor/monitor" data-component="monitor" data-audio="assets/audio/monitor.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/monitor/scene.glb" scale="50 50 50" position="0 0 0" rotation="0 -90 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/mouse/mouse" data-component="mouse" data-audio="assets/audio/mouse.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/mouse/scene.glb" scale="20 20 20" position="0 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/printer/printer" data-component="printer" data-audio="assets/audio/printer.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/printer/scene.glb" scale="5 5 5" position="0 0 0" rotation="0 180 0"></a-entity>
+            </a-entity>            
+        </a-nft>
+
+        <a-nft type="nft" url="assets/marker/keyboard/keyboard" data-component="keyboard" data-audio="assets/audio/keyboard.mp3">
+            <a-entity position="50 0 -50" rotation="0 0 0">
+                <a-entity gltf-model="assets/models/keyboard/scene.glb" scale="10 10 10" position="-10 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>            
         </a-nft>
 
         <a-entity camera></a-entity>
     </a-scene>
 
 <script>
-    const audioPlayer = document.getElementById('audioPlayer');
-    const guide = document.getElementById('markerGuide');
-    const popup = document.getElementById('arPopup');
 
-    document.querySelectorAll('a-nft').forEach(marker => {
-        marker.addEventListener('markerFound', () => {
-            guide.classList.add('detected');
-            popup.classList.add('show');
-            
-            // Audio Logic
-            const audioSrc = marker.getAttribute('data-audio');
-            audioPlayer.src = audioSrc;
-            audioPlayer.play().catch(e => console.log("Audio menunggu interaksi user"));
+    // --- 1. MEMBUAT TOMBOL MENU UTAMA (Sebelumnya variabel ini hilang) ---
+    const backButton = document.createElement('a');
+    backButton.href = 'index.html';
+    backButton.innerHTML = '🧭 Menu Utama';
+    backButton.setAttribute('style', `
+        position: fixed; top: 20px; left: 20px; z-index: 10000;
+        display: flex; align-items: center; gap: 8px; padding: 12px 22px;
+        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
+        color: #ffffff; text-decoration: none; font-family: 'Poppins', sans-serif;
+        font-size: 15px; font-weight: 600; border-radius: 50px; border: 2px solid #22d3ee;
+        box-shadow: 0 0 10px rgba(34,211,238,0.6); transition: all 0.3s ease;
+    `);
+
+    backButton.addEventListener('mouseenter', () => {
+        backButton.style.background = '#ffffff';
+        backButton.style.color = '#000000';
+        backButton.style.transform = 'scale(1.05)';
+    });
+    backButton.addEventListener('mouseleave', () => {
+        backButton.style.background = 'rgba(15, 23, 42, 0.85)';
+        backButton.style.color = '#ffffff';
+        backButton.style.transform = 'scale(1)';
+    });
+    document.body.appendChild(backButton);
+
+    // --- 2. MONITORING LIFECYCLE AR & MARKER ---
+    window.addEventListener('load', () => {
+        const scene = document.querySelector('a-scene');
+        if (!scene) return;
+
+        const markers = document.querySelectorAll('a-nft');
+        markers.forEach(marker => {
+            const url = marker.getAttribute('url');
+            const name = url ? url.split('/').pop() : "Unknown";
+
+            marker.addEventListener('markerFound', () => {
+                document.body.style.border = "5px solid #00ff00"; 
+                setTimeout(() => document.body.style.border = "none", 500);
+                startQuiz(name);
+            });
         });
+    });
 
-        marker.addEventListener('markerLost', () => {
-            guide.classList.remove('detected');
-            popup.classList.remove('show');
-            audioPlayer.pause();
-            audioPlayer.currentTime = 0;
+    // ---DATA POPUP & INTEGRASI AUDIO ---
+    const popupData = {
+        motherboard: {
+            icon: "🔌", title: "Motherboard",
+            desc: "Motherboard adalah papan sirkuit elektronik utama yang menjadi pusat penghubung dan pengaturan untuk semua komponen perangkat keras dalam sebuah komputer."
+        },
+        gpu: { icon: "🎮", title: "GPU", desc: "Mengolah grafis dan menampilkan gambar ke monitor." },
+        ram: { icon: "⚡", title: "RAM", desc: "Menyimpan data sementara saat komputer bekerja." },
+        hardisk: { icon: "💾", title: "Harddisk", desc: "Menyimpan data dan sistem operasi komputer." },
+        keyboard: { icon: "⌨️", title: "Keyboard", desc: "Digunakan untuk memasukkan huruf dan angka." },
+        mouse: { icon: "🖱️", title: "Mouse", desc: "Digunakan untuk menggerakkan pointer." },
+        monitor: { icon: "🖥️", title: "Monitor", desc: "Menampilkan hasil pengolahan data komputer." },
+        printer: { icon: "🖨️", title: "Printer", desc: "Mencetak dokumen dan gambar." },
+        procesor: { icon: "🧠", title: "Processor", desc: "Otak komputer yang menjalankan instruksi." },
+        psu: { icon: "🔋", title: "Power Supply", desc: "Menyuplai listrik ke seluruh komponen." },
+        speaker: { icon: "🔊", title: "Speaker", desc: "Mengubah sinyal audio menjadi suara." }
+    };
+
+    window.addEventListener('load', () => {
+        const markers = document.querySelectorAll('a-nft');
+
+        markers.forEach(marker => {
+            const component = marker.getAttribute('data-component');
+            const audioPath = marker.getAttribute('data-audio');
+
+            if (component) {
+                // Inisialisasi audio (jika file audio-manager.js memuat objek audioManager)
+                if (typeof audioManager !== 'undefined' && audioPath) {
+                    audioManager.initAudio(component, audioPath);
+                }
+
+                // Event ketika Marker Terdeteksi Kamera
+                marker.addEventListener('markerFound', () => {
+                    if (typeof audioManager !== 'undefined') {
+                        audioManager.playAudio(component);
+                    }
+
+                    // Logika Isi Data & Tampilkan Popup
+                    const data = popupData[component];
+                    if (data) {
+                        document.getElementById('popupIcon').innerHTML = data.icon;
+                        document.getElementById('popupTitle').innerHTML = data.title;
+                        document.getElementById('popupContent').innerHTML = data.desc;
+                        document.getElementById('arPopup').classList.add('show');
+                    }
+                });
+
+                // Event ketika Marker Hilang dari Kamera
+                marker.addEventListener('markerLost', () => {
+                    if (typeof audioManager !== 'undefined') {
+                        audioManager.stopAudio(component);
+                    }
+                    // Sembunyikan Popup
+                    document.getElementById('arPopup').classList.remove('show');
+                });
+            }
         });
     });
 </script>
